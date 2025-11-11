@@ -33,6 +33,10 @@ list_all_versions() {
   list_github_tags
 }
 
+verlte() {
+    [  "$1" = "`echo -e "$1\n$2" | sort -V | head -n1`" ]
+}
+
 download_release() {
   local version filename uname_s uname_m os arch url
   version="$1"
@@ -42,7 +46,14 @@ download_release() {
   uname_m="$(uname -m)"
 
   case "$uname_s" in
-    Darwin) os="macos" ;;
+    Darwin) os="macos"
+      # 2.13.1 changed download URL on Mac
+      if verlte "2.13.1" "$version"; then
+        os="macos"
+      else
+        os="Darwin"
+      fi
+    ;;
     Linux) os="Linux" ;;
     *) fail "OS not supported: $uname_s" ;;
   esac
