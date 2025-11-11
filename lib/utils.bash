@@ -42,7 +42,7 @@ download_release() {
   uname_m="$(uname -m)"
 
   case "$uname_s" in
-    Darwin) os="Darwin" ;;
+    Darwin) os="macos" ;;
     Linux) os="Linux" ;;
     *) fail "OS not supported: $uname_s" ;;
   esac
@@ -54,12 +54,6 @@ download_release() {
     arm64) arch="arm64" ;;
     *) fail "Architecture not supported: $uname_m" ;;
   esac
-
-  # Ugly hack until native M1 arm64 binaries are avaliable for Darwin from hadolint
-  # M1 chips can still run x86_64 binaries fine via Rosetta 2 in the meantime
-  if [[ $os == "Darwin" ]]; then
-    arch="x86_64"
-  fi
 
   url="$GH_REPO/releases/download/v${version}/hadolint-${os}-${arch}"
 
